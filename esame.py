@@ -105,7 +105,7 @@ def detect_similar_monthly_variations(time_series, years):
         year_1 = my_dict[str(years[0])]
         year_2 = my_dict[str(years[1])]
     except Exception:
-        raise ExamException("Error, Anno non trovato")
+        raise ExamException("Error, Year not found")
         
 
     #parte ALGEBRICA del file python
@@ -116,9 +116,9 @@ def detect_similar_monthly_variations(time_series, years):
     next = None
     
     if len(year_1) < 12 or len(year_2) < 12:
-        raise ExamException("Error Anno non valido")
+        raise ExamException("Error, Invalid year")
     if len(year_2) < 12:
-        raise ExamException("Error, Anno non valido")
+        raise ExamException("Error, Invalid year")
     
     #ciclo for per calcolare la variazione mensile tra i due anni
     for month in range(len(year_1)-1):
