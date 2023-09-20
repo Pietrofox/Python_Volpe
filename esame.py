@@ -25,10 +25,13 @@ class CSVTimeSeriesFile:
         #viene iizializzata una lista vuota chiamata 'my_list'
         my_list = []
 
+        #con questa variabile tengo traccia ella prima linea
+        
         #viene inizializzato un ciclo 'for' utilizzato per
         #iterare attraverso le righe del file.
         
         for line in datafile:
+
             #ogni riga viene suddivisa in una lista usando
             #come separatore una virgola
             my_list.append(line.split(","))
@@ -54,42 +57,7 @@ class CSVTimeSeriesFile:
 
 #questa funzione è usata per elaborare i dati CSV e creare un dizionario che raggruppa 
 #i dati anno per anno
-#def helperfunction(time_series):
-    #apro il file come lista
-    #my_list = CSVTimeSeriesFile(time_series).get_data()#viene usato il metodo get_data
-    #della classe 'CSVTimeSeriesFile' per ottenere i dati e
-    #memorizzarli nella variabile 'my_list'
-   
-    #creo dizionario vuoto chiamto 'my_dict'
-    #my_dict = {}
-    
-    #leggo solo l'anno del primo elemento, cioè i primi 4
-    #caratteri e lo confronto con l'anno corrente 
-    #('creo la variabile current_year' con l'anno del primo
-    #elemento)
-    #current_year = my_list[0][0][0:4]
-    #temp_list = [] #inizializzazione di una lista temporanea per raccogliere i dati 
-#del mese corrente
 
-    #popolo la temp_list ciclando anno per anno
-    #for line in my_list:
-        #year = line[0][0:4]
-        #se l'anno non è cambiato aggiungo il valore del mese a 'temp_list'
-        #if current_year == year:
-            #temp_list.append(line[1])
-        #else se l'anno è passato a quello successivo
-        #else:
-            #my_dict[current_year] = temp_list
-            #azzero la temp list e aggiorno l'anno corrente
-            #temp_list = []
-            #current_year = year
-            #temp_list.append(line[1])
-
-    #per inserire l'ultimo anno        
-    #my_dict[current_year] = temp_list
-    
-    #alla fine del ciclo restituisco il dizionario 'my_dict'
-    #return my_dict
 
 #creazione della funzione 'detect_similar_monthly_variations'
 def detect_similar_monthly_variations(time_series, years):
@@ -104,29 +72,38 @@ def detect_similar_monthly_variations(time_series, years):
     #viene usato il metodo get_data
     #della classe 'CSVTimeSeriesFile' per ottenere i dati e
     #memorizzarli nella variabile 'my_list'
-    #creo dizionario con la mia funzione
+    #creo dizionario vuoto chiamato 'my_dict' con la mia funzione
     my_dict = {}
 
+    #leggo solo l'anno del primo elemento, cioè i primi 4
+    #caratteri e lo confronto con l'anno corrente 
+    #('creo la variabile current_year' con l'anno del primo
+    #elemento)
     current_year = my_list[0][0][0:4]
-    temp_list = []
-
+    
+    #inizializzazione di una lista temporanea per raccogliere i dati del mese corrente
+    temp_list = [] 
+    
+    #popolo la lista temporanea('temp_list') ciclando anno per anno
     for line in my_list:
+        #se l'anno non è cambiato aggiungo il valore del mese a 'temp_list'
         year = line[0][0:4]
 
         if current_year == year:
             temp_list.append(line[1])
 
+        #else se l'anno è passato a quello successivo
         else:
             my_dict[current_year] = temp_list
 
+            #azzero la temp list e aggiorno l'anno corrente
             temp_list = []
             current_year = year
             temp_list.append(line[1])
-
+            
+    #per inserire l'ultimo anno
     my_dict[current_year] = temp_list
     
-    
-    #my_dict = helperfunction(time_series)
     
     #estraggo i dati contenuti nella lista years
     try:
@@ -134,6 +111,11 @@ def detect_similar_monthly_variations(time_series, years):
         year_2 = my_dict[str(years[1])]
     except Exception:
         raise ExamException("Error, Year not found")
+
+    #controllo se gli anni sono successivi mediante la sotrazione in valore assoluto
+    #years[0] e years[1] sono  valori contenuti nella stringa years
+    if abs(years[0]-years[1]) != 1:
+        raise ExamException("Error, Year not successive")
         
 
     #parte ALGEBRICA del file python
@@ -144,8 +126,6 @@ def detect_similar_monthly_variations(time_series, years):
     next = None
     
     if len(year_1) < 12 or len(year_2) < 12:
-        raise ExamException("Error, Invalid year")
-    if len(year_2) < 12:
         raise ExamException("Error, Invalid year")
     
     #ciclo for per calcolare la variazione mensile tra i due anni
@@ -174,14 +154,15 @@ def detect_similar_monthly_variations(time_series, years):
 
 
 #CODICE PRINCIPALE
+#usato per testing
 #definisco la classe 'years' con due anni
-years = [1949,1950]
+#years = [1949,1950]
 #chiamo la funzione 'detect_similar_monthly_variations' con il nome del file CSV e la 
 #lista 'years' come argomenti. memorizzo il risultato nella variabile 'x'
-x = detect_similar_monthly_variations("data.csv",years)
+#x = detect_similar_monthly_variations("data.csv",years)
 #il risultato 'x' viene stampato a schermo per mostrare se lae variazioni mensili tra i 
 #due anni sopra specificati sono simili o meno
 #utyilizzo il ciclo for per stampare su più linee altrimenti l'output 
 #sarebbe stato rimasto tutto su una singola linea separato da virgole
 #for value in x:
-print(x)
+#print(x)
